@@ -1,27 +1,23 @@
+const { entry, commonPlugins, resolve } = require('./webpack.common');
+
+const path = require("path");
+const buildPath = path.resolve(__dirname, 'dist');
 const WebpackShellPlugin = require('webpack-shell-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require("path");
+
+const isProduction = false;
 
 module.exports = {
-  entry: {
-    main: "./src/index.tsx"
-  },
+  entry,
   output: {
-    path: `${__dirname}/dist`,
+    path: buildPath,
     publicPath: '/',
-    filename: 'bundle.js',
   },
   devServer: {
     contentBase: './dist',
   },
   plugins: [
-    new WebpackShellPlugin({
-        onBuildEnd:[
-          'cp ./node_modules/\@webcomponents/custom-elements/src/native-shim.js ./dist',
-          'cp ./node_modules/\@webcomponents/custom-elements/custom-elements.min.js ./dist',
-          'cp ./src/index.html ./dist'
-        ]
-    })
+    ...commonPlugins
   ],
   module: {
     rules: [
@@ -61,12 +57,5 @@ module.exports = {
       }
     ]
   },
-  resolve: {
-    extensions: [
-      '.js',
-      '.jsx',
-      '.tsx',
-      '.ts'
-    ]
-  }
+  resolve,
 }
