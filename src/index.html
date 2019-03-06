@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Custom Elements, Web Components</title>
+
+    <!--
+    This is roughly how `polymer build` puts the native shim in its output to
+    prevent it from loading in environments that don't have native custom
+    elements. This has to happen before you load the custom elements polyfill
+    so that it doesn't mistake the polyfill for a native implementation.
+
+    For more info:
+    https://github.com/Polymer/polymer-build/
+    Where `polymer build` does this:
+    https://github.com/Polymer/polymer-build/blob/981bf46a92aeaa88c3863b57fb0dcedfa8713e42/src/custom-elements-es5-adapter.ts#L77
+    -->
+
+    <script>if (!window.customElements) { document.write('<!--'); }</script>
+    <script src="./native-shim.js"></script>
+    <!-- DO NOT REMOVE THIS COMMENT, WE NEED ITS CLOSING MARKER -->
+
+
+    <!--
+    The webcomponentsjs loader does feature detection and loads only the specific
+    polyfills needed by that client.
+
+    For more info:
+        https://github.com/webcomponents/webcomponentsjs/#webcomponents-loaderjs
+
+    If you can't use the loader, you can do the same thing as the snippet above:
+    -->
+
+    <script>if (window.customElements) { document.write('<!--'); }</script>
+    <script src="./custom-elements.min.js"></script>
+    <!-- DO NOT REMOVE THIS COMMENT, WE NEED ITS CLOSING MARKER -->
+
+
+    <!--
+    You might be tempted to build the polyfill into your main app bundle. However,
+    you probably shouldn't because then *all users* end up downloading it
+    regardless of whether or not they need it!
+    -->
+
+</head>
+<body>
+    <h1>Custom Elements</h1>
+
+    <wp-custom-web-component>fasfsadf</wp-custom-web-component>
+
+    <script src="./bundle.js"></script>
+</body>
+</html>
