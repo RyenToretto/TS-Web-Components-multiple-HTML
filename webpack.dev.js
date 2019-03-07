@@ -1,11 +1,7 @@
+const path = require('path');
 const { entry, commonPlugins, resolve } = require('./webpack.common');
 
-const path = require("path");
 const buildPath = path.resolve(__dirname, 'dist');
-const WebpackShellPlugin = require('webpack-shell-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
-const isProduction = false;
 
 module.exports = {
   entry,
@@ -17,45 +13,62 @@ module.exports = {
     contentBase: './dist',
   },
   plugins: [
-    ...commonPlugins
+    ...commonPlugins,
   ],
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        use:{
-            loader: 'babel-loader',
-                options: {
-                    presets: ['@babel/preset-env'],
-                    plugins: [
-                      "transform-custom-element-classes",
-                      "@babel/plugin-proposal-class-properties",
-                    ]
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              {
+                debug: true,
+                useBuiltIns: 'entry',
+              },
+            ],
+            plugins: [
+              'transform-custom-element-classes',
+              '@babel/plugin-proposal-class-properties',
+              ['module:fast-async', {
+                env: {
+                  log: false,
                 },
-            },
-        exclude: /node_modules/
+                compiler: {
+                  promises: true,
+                  generators: false,
+                },
+                runtimePattern: null,
+                useRuntimeModule: false,
+              }],
+            ],
+          },
+        },
+        exclude: /node_modules/,
       },
       {
         test: /\.(ts|tsx)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
         use: [
           'style-loader',
-          'css-loader'
-        ]
+          'css-loader',
+        ],
       },
       {
         test: /\.scss$/,
         use: [
           'style-loader',
           'css-loader',
-          'sass-loader'
-        ]
-      }
-    ]
+          'sass-loader',
+        ],
+      },
+    ],
   },
   resolve,
-}
+};

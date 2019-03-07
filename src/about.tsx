@@ -1,3 +1,4 @@
+
 const paragraph: HTMLParagraphElement | null = document.querySelector('p');
 
 if(paragraph) {
